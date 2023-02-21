@@ -2,9 +2,11 @@ package mx.com.stream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.boot.SpringApplication;
@@ -139,11 +141,91 @@ public class StreamApplication {
 				.limit(4)
 				.collect(Collectors.toList());
 		
+		//skip es para evitar las posiciones 
+		//limit es para limitar el numero de letras que vana a ser mostradas
+		
 		abcFilter.stream().forEach(
 				e -> System.out.println(e));
 		
 		//SORT
 		System.out.println("--------------------SORT----------------------");
+		//ordenamientos
+		setUpUser();//se instancia de nuevo la lista de nombres
+		
+		//la funcion regresa la lista ordenada alfabeticamente
+		users = users.stream()
+		.sorted(Comparator.comparing(User::getNombre))//esta lista se compara con la funcion sorted y 
+		//dentro se le mete una funcion para comparar los nombres de la lista y asi salgan ordenados
+		.collect(Collectors.toList());
+		
+		//se imprime la lista ordenada
+		imprimirLista();
+		
+		//MINIMO Y MAXIMO
+		System.out.println("--------------------MINIMO Y MAXIMO----------------------");
+		//estas funciones de minimo y maximo nos devuelven esos valores 
+		setUpUser();
+		User userMin = users.stream()
+				.min(Comparator.comparing(User::getId))
+				.orElse(null);
+		System.out.println(userMin.getId());
+		User userMax = users.stream()
+				.max(Comparator.comparing(User::getId))
+				.orElse(null);
+		System.out.println(userMax.getId());
+		
+		//DISTINCT
+		System.out.println("--------------------DISTINCT----------------------");
+		
+		String[] abcDist = {
+				"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"
+				//parametros repetidos para comprobar 
+				,"a","b","c","d","e","f"
+		};
+		
+		List<String> listaDist = Arrays.stream(abcDist)
+				.distinct().collect(Collectors.toList());
+		
+		listaDist.stream().forEach(
+				e -> System.out.println(e));
+		
+		
+		//ALLMATCH, ANYMATCH, NONEMATCH
+		System.out.println("--------------------ALLMATCH, ANYMATCH, NONEMATCH----------------------");
+		
+		List<Integer> listaNum = Arrays.asList(100,200,300,400,500);
+		
+		//aqui le que si todos los valores son mayores a 301
+		boolean allMAtch = listaNum.stream().allMatch(e -> e > 301);
+		System.out.println(allMAtch);
+		
+		//aqui le digo si talgun valor supera los 301
+		boolean anyMAtch = listaNum.stream().anyMatch(e -> e > 301);
+		System.out.println(anyMAtch);
+		
+		//aqui le digo si tninguno supera los 501
+		boolean noneMAtch = listaNum.stream().noneMatch(e -> e > 501);
+		System.out.println(noneMAtch);
+		
+		//SUM AVERAGE RANGE
+		System.out.println("--------------------SUM AVERAGE RANGE----------------------");
+		setUpUser();
+		//con este metodo saco el promedio de los numeros que se encuentran como ID en la lista
+		double resultAverage = users.stream()
+				.mapToInt(User::getId)
+				.average()
+				.orElse(0);
+		System.out.println(resultAverage);
+		
+		//con este metodo, sumo todos los ID's
+		double resultSum = users.stream()
+				.mapToInt(User::getId)
+				.sum();
+		System.out.println(resultSum);
+		
+		//con este metodo saco el rango y lo sumo 
+		System.out.println(
+				IntStream.range(0,4).sum());
 		
 		
 	}
