@@ -225,9 +225,22 @@ public class StreamApplication {
 		
 		//con este metodo saco el rango y lo sumo 
 		System.out.println(
-				IntStream.range(0,4).sum());
+				IntStream.range(0,10).sum());
 		
+		//REDUCE
+		System.out.println("--------------------REDUCE----------------------");
+		setUpUser();
+		//con esta funcion se crea un acomulador y un elemnto de iteracion 
+		//y a su vez la opoeracion saca un elemnto que es la suma de los numero en este caso
+		int numero = users.stream()
+				.map(User::getId)
+				.reduce(0, Integer::sum);
 		
+		System.out.println(numero);
+		
+		//JOINING
+		System.out.println("--------------------JOINING----------------------");
+		setUpUser();
 	}
 	
 	
